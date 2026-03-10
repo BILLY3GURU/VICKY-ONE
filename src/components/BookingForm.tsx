@@ -51,6 +51,15 @@ export default function BookingForm() {
             <p className="text-zinc-400 font-light mb-8 leading-relaxed">
               Ready to capture something beautiful? Fill out the form below and I'll get back to you within 24 hours to discuss your vision and availability.
             </p>
+
+            <div className="mb-12">
+              <a href="https://wa.me/254717305574" target="_blank" rel="noopener noreferrer">
+                <button className="bg-[#25D366] text-white border-none px-8 py-4 text-base rounded-xl cursor-pointer font-bold flex items-center gap-3 hover:bg-[#128C7E] transition-all duration-300 shadow-lg shadow-green-500/20 hover:-translate-y-1">
+                  <span className="text-xl">💬</span>
+                  Chat with us on WhatsApp
+                </button>
+              </a>
+            </div>
             
             <div className="space-y-6">
               <div className="flex items-start gap-4">
