@@ -68,6 +68,17 @@ export default function Footer() {
                 <MapPin className="w-5 h-5 text-red-600 shrink-0" />
                 <span className="text-zinc-500 text-sm">Eden Center, 1st Floor, Room F4</span>
               </li>
+              <li className="pt-4">
+                <a 
+                  href="https://wa.me/254717305574" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 bg-[#25D366] hover:bg-[#128C7E] text-white px-6 py-3 rounded-xl text-sm font-bold transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1"
+                >
+                  <span className="text-lg">💬</span>
+                  Chat with us on WhatsApp
+                </a>
+              </li>
             </ul>
           </div>
 
