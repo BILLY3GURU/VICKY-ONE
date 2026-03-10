@@ -1,5 +1,6 @@
 import { motion } from 'motion/react';
 import { Play, Instagram, ExternalLink } from 'lucide-react';
+import { useRef, useState, FC } from 'react';
 
 const REELS = [
   {
@@ -7,6 +8,7 @@ const REELS = [
     title: 'Cinematic Wedding Highlights',
     url: 'https://www.instagram.com/s/aGlnaGxpZ2h0OjE4MDU4MzM1MzU5MTk5ODcx?story_media_id=3744569572709181142_48639838798&igsh=eDllZjRqZHlqcHVo',
     thumbnail: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&q=80&w=800',
+    preview: 'https://assets.mixkit.co/videos/preview/mixkit-wedding-ceremony-in-the-forest-44346-large.mp4',
     category: 'Wedding'
   },
   {
@@ -14,6 +16,7 @@ const REELS = [
     title: 'Behind the Scenes: Fashion',
     url: 'https://www.instagram.com/s/aGlnaGxpZ2h0OjE4MDU2NTgwNTU0MjA0ODA2?story_media_id=3632297409689841091_48639838798&igsh=MTJkbGhwdjEyYmJjMA==',
     thumbnail: 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&q=80&w=800',
+    preview: 'https://assets.mixkit.co/videos/preview/mixkit-fashion-model-posing-in-a-studio-44349-large.mp4',
     category: 'Fashion'
   },
   {
@@ -21,9 +24,99 @@ const REELS = [
     title: 'Portrait Session Magic',
     url: 'https://www.instagram.com/s/aGlnaGxpZ2h0OjE3OTc1NjUxOTI5NjUzOTE4?story_media_id=2912611856993008895_48639838798&igsh=MWhuZ3Z4MjBybjgxMQ==',
     thumbnail: 'https://images.unsplash.com/photo-1554048612-b6a482bc67e5?auto=format&fit=crop&q=80&w=800',
+    preview: 'https://assets.mixkit.co/videos/preview/mixkit-portrait-of-a-woman-in-a-field-44348-large.mp4',
     category: 'Portrait'
   }
 ];
+
+interface ReelCardProps {
+  reel: typeof REELS[0];
+  index: number;
+}
+
+const ReelCard: FC<ReelCardProps> = ({ reel, index }) => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+    if (videoRef.current) {
+      videoRef.current.play().catch(() => {
+        // Autoplay might be blocked if not muted, but we set muted
+      });
+    }
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    if (videoRef.current) {
+      videoRef.current.pause();
+      videoRef.current.currentTime = 0;
+    }
+  };
+
+  return (
+    <motion.a
+      href={reel.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      whileHover={{ scale: 1.02, opacity: 0.95 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.2 }}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      className="group relative aspect-[9/16] rounded-3xl overflow-hidden bg-zinc-900"
+    >
+      {/* Thumbnail Image */}
+      <img
+        src={reel.thumbnail}
+        alt={reel.title}
+        className={`w-full h-full object-cover transition-all duration-1000 ${
+          isHovered ? 'opacity-0' : 'opacity-60 group-hover:scale-110'
+        }`}
+        referrerPolicy="no-referrer"
+        loading="lazy"
+      />
+
+      {/* Video Preview */}
+      <video
+        ref={videoRef}
+        src={reel.preview}
+        muted
+        loop
+        playsInline
+        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
+          isHovered ? 'opacity-60' : 'opacity-0'
+        }`}
+      />
+      
+      <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center">
+        <div className="w-16 h-16 rounded-full border border-white/20 flex items-center justify-center mb-6 group-hover:bg-red-600 group-hover:border-red-600 transition-all duration-500 transform group-hover:scale-110">
+          <Play className="w-6 h-6 text-white fill-white group-hover:scale-110 transition-transform" />
+        </div>
+        
+        <span className="text-red-600 text-[10px] uppercase tracking-[0.4em] font-bold mb-2 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0">
+          {reel.category}
+        </span>
+        <h3 className="text-xl font-serif italic text-white mb-4 opacity-0 group-hover:opacity-100 transition-all duration-500 delay-100 translate-y-4 group-hover:translate-y-0">
+          {reel.title}
+        </h3>
+        
+        <div className="flex items-center gap-2 text-zinc-400 text-[10px] uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all duration-500 delay-200">
+          <Instagram className="w-3 h-3" />
+          View on Instagram
+          <ExternalLink className="w-3 h-3" />
+        </div>
+      </div>
+
+      {/* Decorative corner elements */}
+      <div className="absolute top-6 right-6 w-8 h-8 border-t border-r border-white/20 group-hover:border-red-600/50 transition-colors duration-500" />
+      <div className="absolute bottom-6 left-6 w-8 h-8 border-b border-l border-white/20 group-hover:border-red-600/50 transition-colors duration-500" />
+    </motion.a>
+  );
+}
 
 export default function VideoShowcase() {
   return (
@@ -56,49 +149,7 @@ export default function VideoShowcase() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {REELS.map((reel, i) => (
-            <motion.a
-              key={reel.id}
-              href={reel.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              whileHover={{ scale: 1.02, opacity: 0.95 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.2 }}
-              className="group relative aspect-[9/16] rounded-3xl overflow-hidden bg-zinc-900"
-            >
-              <img
-                src={reel.thumbnail}
-                alt={reel.title}
-                className="w-full h-full object-cover opacity-60 group-hover:opacity-40 group-hover:scale-110 transition-all duration-1000"
-                referrerPolicy="no-referrer"
-                loading="lazy"
-              />
-              
-              <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center">
-                <div className="w-16 h-16 rounded-full border border-white/20 flex items-center justify-center mb-6 group-hover:bg-red-600 group-hover:border-red-600 transition-all duration-500 transform group-hover:scale-110">
-                  <Play className="w-6 h-6 text-white fill-white group-hover:scale-110 transition-transform" />
-                </div>
-                
-                <span className="text-red-600 text-[10px] uppercase tracking-[0.4em] font-bold mb-2 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0">
-                  {reel.category}
-                </span>
-                <h3 className="text-xl font-serif italic text-white mb-4 opacity-0 group-hover:opacity-100 transition-all duration-500 delay-100 translate-y-4 group-hover:translate-y-0">
-                  {reel.title}
-                </h3>
-                
-                <div className="flex items-center gap-2 text-zinc-400 text-[10px] uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all duration-500 delay-200">
-                  <Instagram className="w-3 h-3" />
-                  View on Instagram
-                  <ExternalLink className="w-3 h-3" />
-                </div>
-              </div>
-
-              {/* Decorative corner elements */}
-              <div className="absolute top-6 right-6 w-8 h-8 border-t border-r border-white/20 group-hover:border-red-600/50 transition-colors duration-500" />
-              <div className="absolute bottom-6 left-6 w-8 h-8 border-b border-l border-white/20 group-hover:border-red-600/50 transition-colors duration-500" />
-            </motion.a>
+            <ReelCard key={reel.id} reel={reel} index={i} />
           ))}
         </div>
 
