@@ -8,7 +8,7 @@ import Testimonials from './components/Testimonials';
 import BookingForm from './components/BookingForm';
 import Footer from './components/Footer';
 import CustomCursor from './components/CustomCursor';
-import WhatsAppButton from './components/WhatsAppButton';
+import FloatingContact from './components/WhatsAppButton';
 import { motion, useScroll, useSpring } from 'motion/react';
 
 export default function App() {
@@ -22,7 +22,7 @@ export default function App() {
   return (
     <div className="relative min-h-screen selection:bg-red-600 selection:text-white">
       <CustomCursor />
-      <WhatsAppButton />
+      <FloatingContact />
       {/* Progress Bar */}
       <motion.div
         className="fixed top-0 left-0 right-0 h-1 bg-red-600 z-[60] origin-left"

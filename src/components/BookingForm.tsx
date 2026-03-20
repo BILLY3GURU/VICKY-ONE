@@ -2,13 +2,14 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { motion } from 'motion/react';
-import { Send, Calendar, User, Mail, MessageSquare, Camera, CheckCircle2, ArrowRight } from 'lucide-react';
+import { Send, Calendar, User, Mail, MessageSquare, Camera, CheckCircle2, ArrowRight, Phone } from 'lucide-react';
 import { useState } from 'react';
 import Modal from './Modal';
 
 const bookingSchema = z.object({
   name: z.string().min(2, 'Name is required'),
   email: z.string().email('Invalid email address'),
+  phone: z.string().min(10, 'Valid phone number is required'),
   sessionType: z.string().min(1, 'Please select a session type'),
   date: z.string().min(1, 'Please select a preferred date'),
   message: z.string().min(10, 'Please tell us a bit more about your vision'),
@@ -112,6 +113,17 @@ export default function BookingForm() {
                     placeholder="john@example.com"
                   />
                   {errors.email && <p className="text-red-500 text-[10px] uppercase tracking-wider font-bold">{errors.email.message}</p>}
+                </div>
+                <div className="space-y-3">
+                  <label className="text-[10px] uppercase tracking-[0.3em] text-zinc-500 font-bold flex items-center gap-2">
+                    <Phone className="w-3 h-3" /> Phone Number
+                  </label>
+                  <input
+                    {...register('phone')}
+                    className="w-full bg-black/40 border border-white/10 rounded-2xl px-6 py-4 focus:border-red-600 outline-none transition-all duration-300 text-sm"
+                    placeholder="+254 700 000000"
+                  />
+                  {errors.phone && <p className="text-red-500 text-[10px] uppercase tracking-wider font-bold">{errors.phone.message}</p>}
                 </div>
               </div>
 
